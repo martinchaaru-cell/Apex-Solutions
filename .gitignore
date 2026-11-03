@@ -11,4 +11,5 @@ backups/
 .venv/
 .replit-deps-installed
 .secret_key
+# Replit's GitHub login cannot push workflow files. Remove this line once you push with a token that has the workflow scope.
 .github/

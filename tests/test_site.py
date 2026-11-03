@@ -358,3 +358,13 @@ def test_quote_link_prefills_service(client):
     assert "I am interested in: Retail POS." in html
     html = client.get("/contact?service=pos-systems&item=<script>").get_data(as_text=True)
     assert "I am interested in" not in html
+
+
+def test_database_url_from_hosting_provider_is_normalised(monkeypatch):
+    import importlib, config
+    for given in ("postgres://u:p@h/db", "postgresql://u:p@h/db"):
+        monkeypatch.setenv("DATABASE_URL", given)
+        importlib.reload(config)
+        assert config.Config.SQLALCHEMY_DATABASE_URI == "postgresql+psycopg://u:p@h/db"
+    monkeypatch.delenv("DATABASE_URL")
+    importlib.reload(config)

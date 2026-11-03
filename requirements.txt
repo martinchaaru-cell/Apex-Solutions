@@ -9,10 +9,3 @@ SQLAlchemy==2.1.6
 Flask-Limiter==4.1.1      # rate limiting on the enquiry form
 psycopg[binary]==3.3.6    # PostgreSQL driver
 gunicorn==26.2.0          # production server
-click
-flask
-flask-limiter
-flask-sqlalchemy
-flask-wtf
-werkzeug
-wtforms
