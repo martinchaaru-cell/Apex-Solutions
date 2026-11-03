@@ -11,6 +11,7 @@ Flask, PostgreSQL (SQLite in development), Docker and Caddy. Built to **Level 2*
 Everything sits in the repository root, like Finance Intel and Match Oracle:
 
 ```
+docker-entrypoint.sh  container start: admin, documents, then the web server
 app.py            app factory, security headers, error pages, CLI commands
 wsgi.py           production entry point (gunicorn wsgi:app)
 config.py         settings from environment variables
@@ -106,7 +107,9 @@ bandit -q -r . -x ./tests && pip-audit -r requirements.txt
 
 1. Push the code to GitHub (see above). In Render choose **New > Blueprint**, pick this repository, and it reads `render.yaml`. It creates the website (Starter plan with a 1 GB disk for uploaded documents) and a PostgreSQL database.
 2. When asked, fill in `SITE_URL` (the `https://...onrender.com` address Render gives you, or your own domain later), `ADMIN_EMAIL`, `ADMIN_PASSWORD` and the contact and mail settings. `SECRET_KEY` and `DATABASE_URL` are filled in for you.
-3. Deploy. The start script creates the admin from the two secrets and imports the documents in `seed_documents/`.
+3. Deploy. The container's start script (`docker-entrypoint.sh`) creates the admin from the two secrets and imports the documents in `seed_documents/`.
+
+If you created the service by hand instead of with the Blueprint, add the same values under **Environment** (at least `SECRET_KEY`, `DATABASE_URL`, `SITE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `DOCUMENTS_FOLDER=/var/data/documents`) and attach a disk mounted at `/var/data`.
 4. Sign in at `/login`, then delete the `ADMIN_PASSWORD` environment variable.
 5. Never set `PREVIEW_MODE` on Render.
 

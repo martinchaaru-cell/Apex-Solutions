@@ -2,18 +2,16 @@
 services:
   - type: web
     name: apex-solutions
-    runtime: python
+    runtime: docker                # builds the Dockerfile; docker-entrypoint.sh starts the site
     plan: starter                  # free plans lose uploaded files on every restart
-    buildCommand: pip install -r requirements.txt
-    startCommand: bash scripts/render-start.sh
-    healthCheckPath: /
+    healthCheckPath: /robots.txt
     disk:
       name: documents
       mountPath: /var/data
       sizeGB: 1
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.9
+      - key: WEB_CONCURRENCY
+        value: "2"
       - key: SECRET_KEY
         generateValue: true
       - key: DATABASE_URL

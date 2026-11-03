@@ -8,15 +8,17 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY *.py ./
+COPY docker-entrypoint.sh ./
 COPY templates ./templates
 COPY static ./static
 COPY seed_documents ./seed_documents
 
 # instance/ holds uploaded documents; it is mounted as a volume in docker-compose.yml
+# The entrypoint starts as root only to fix ownership of a mounted disk, then drops to the apex user.
 RUN useradd --create-home --uid 10001 apex && mkdir -p /app/instance/documents \
-    && chown -R apex:apex /app/instance && chmod 700 /app/instance/documents
-USER apex
+    && chown -R apex:apex /app/instance /app/seed_documents && chmod 700 /app/instance/documents \
+    && chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8000/robots.txt',timeout=4)"
-CMD ["gunicorn", "-w", "3", "-b", "0.0.0.0:8000", "--forwarded-allow-ips=*", "--access-logfile", "-", "wsgi:app"]
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD python -c "import os,urllib.request;urllib.request.urlopen('http://127.0.0.1:%s/robots.txt'%os.environ.get('PORT','8000'),timeout=4)"
+CMD ["/app/docker-entrypoint.sh"]
