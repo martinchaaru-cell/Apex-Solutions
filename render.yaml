@@ -1,0 +1,58 @@
+# Render Blueprint: creates the website and its database. Disk and database need paid plans.
+services:
+  - type: web
+    name: apex-solutions
+    runtime: python
+    plan: starter                  # free plans lose uploaded files on every restart
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash scripts/render-start.sh
+    healthCheckPath: /
+    disk:
+      name: documents
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: apex-db
+          property: connectionString
+      - key: DOCUMENTS_FOLDER
+        value: /var/data/documents
+      - key: BEHIND_PROXY
+        value: "true"
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: SITE_URL
+        sync: false                # your https://... address, set in the dashboard
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_NAME
+        value: Martin Chaaru
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: CONTACT_PHONE
+        sync: false
+      - key: WHATSAPP_NUMBER
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: MAIL_TO
+        sync: false
+
+databases:
+  - name: apex-db
+    plan: basic-256mb

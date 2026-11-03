@@ -28,7 +28,7 @@ forms.py, mail.py
 templates/        public pages, admin/, portal/, auth/
 static/           css/, js/, fonts/, img/brand (logo), img/site (photos)
 seed_documents/   Service Guide, agreements and templates, imported as admin-only documents on start
-tests/            pytest suite (192 tests)
+tests/            pytest suite (193 tests)
 scripts/          replit-run.sh, backup.sh, restore-test.sh
 docs/, security/  build spec and Security Baseline evidence checklist
 ```
@@ -102,6 +102,16 @@ bandit -q -r . -x ./tests && pip-audit -r requirements.txt
 
 **Secrets:** `SECRET_KEY` (always), `POSTGRES_PASSWORD` and `DATABASE_URL` (live server), `SMTP_PASSWORD` (if email is used), and the backup passphrase file.
 
+## Deploy on Render
+
+1. Push the code to GitHub (see above). In Render choose **New > Blueprint**, pick this repository, and it reads `render.yaml`. It creates the website (Starter plan with a 1 GB disk for uploaded documents) and a PostgreSQL database.
+2. When asked, fill in `SITE_URL` (the `https://...onrender.com` address Render gives you, or your own domain later), `ADMIN_EMAIL`, `ADMIN_PASSWORD` and the contact and mail settings. `SECRET_KEY` and `DATABASE_URL` are filled in for you.
+3. Deploy. The start script creates the admin from the two secrets and imports the documents in `seed_documents/`.
+4. Sign in at `/login`, then delete the `ADMIN_PASSWORD` environment variable.
+5. Never set `PREVIEW_MODE` on Render.
+
+Free web and database plans are fine for a look around, but they lose uploaded documents on restart and the free database expires, so use paid plans for anything real.
+
 ## Day-to-day commands
 
 | Task | Command |
@@ -112,4 +122,3 @@ bandit -q -r . -x ./tests && pip-audit -r requirements.txt
 | Export enquiries to CSV | `flask --app app export-enquiries enquiries.csv` (or the button in Admin > Enquiries) |
 | Delete one person's enquiries | `flask --app app delete-enquiry name@example.com` |
 | Purge old enquiries (monthly) | `flask --app app purge-enquiries` |
-# Apex-Solutions

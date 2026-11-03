@@ -9,7 +9,10 @@ def _bool(name, default=False):
 class Config:
     ENV_NAME = os.environ.get("APP_ENV", "production")
     SECRET_KEY = os.environ.get("SECRET_KEY")
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL", "sqlite:///apex-dev.db")
+    # Hosts such as Render give postgres:// or postgresql://; this app uses the psycopg 3 driver.
+    SQLALCHEMY_DATABASE_URI = (os.environ.get("DATABASE_URL", "sqlite:///apex-dev.db")
+                               .replace("postgres://", "postgresql+psycopg://", 1)
+                               .replace("postgresql://", "postgresql+psycopg://", 1))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_pre_ping": True}
 
