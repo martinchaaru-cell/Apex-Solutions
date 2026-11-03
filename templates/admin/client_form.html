@@ -1,0 +1,16 @@
+{% extends "dash_base.html" %}
+{% from "macros.html" import field with context %}
+{% block title %}Add a client{% endblock %}
+{% block heading %}<p class="crumb"><a href="{{ url_for('admin.clients') }}">Clients</a> /</p><h1>Add a client</h1>{% endblock %}
+{% block content %}
+<section class="card card--narrow">
+  <p class="muted">The client gets a one-time link to choose their own password. You never set or see their password.</p>
+  <form method="post" class="form" novalidate>
+    {{ form.csrf_token }}
+    {{ field(form.name, ic="users") }}
+    {{ field(form.email, ic="mail") }}
+    {{ field(form.organisation, ic="briefcase") }}
+    <button class="btn btn--primary btn--block" type="submit">Create account and get link</button>
+  </form>
+</section>
+{% endblock %}

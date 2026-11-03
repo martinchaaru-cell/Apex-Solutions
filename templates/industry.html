@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, photo_hero, sol_card, work_card, cta_band with context %}
+{% block title %}{{ ind.title }} — Apex Solutions{% endblock %}
+{% block description %}{{ ind.lede }}{% endblock %}
+{% block content %}
+{% call photo_hero(ind.hero, "Industries", ind.title, ind.lede) %}
+  <div class="actions"><a class="btn btn--primary btn--lg" href="{{ url_for('site.contact') }}">Talk About Your Project {{ icon("next", "ic ic--xs") }}</a></div>
+{% endcall %}
+
+<section class="sec sec--snug">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Problems we hear most</h2>
+      <p>If two or three of these sound familiar, we can help.</p>
+    </div>
+    <ul class="fcards">
+      {% for t, d in ind.challenges %}
+      <li class="fcard fcard--plain"><strong>{{ t }}</strong><span>{{ d }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="sec sec--tint">
+  <div class="wrap split-why">
+    <div>
+      <h2>Modules we build</h2>
+      <ul class="checks checks--two">{% for m in ind.modules %}<li>{{ icon("tick", "ic ic--sm") }} {{ m }}</li>{% endfor %}</ul>
+    </div>
+    <aside class="why-panel why-panel--dark">
+      {{ icon("shield") }}
+      <p>{{ ind.support_note }}</p>
+    </aside>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="center-head"><h2>Related solutions</h2></div>
+    <div class="sgrid">
+      {% for s in sols %}{{ sol_card(s) }}{% endfor %}
+    </div>
+    {% if work %}
+    <div class="center-head center-head--tight"><h2>Related work</h2></div>
+    <div class="wgrid">
+      {% for w in work %}{{ work_card(w) }}{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{{ cta_band("Let's build your solution together", "Get in touch today and let's turn your vision into reality.", "rocket", "Contact Us", whatsapp=True) }}
+{% endblock %}

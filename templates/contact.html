@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, field, photo_hero, cta_band with context %}
+{% block title %}Contact — Apex Solutions{% endblock %}
+{% block description %}Contact Apex Solutions about your project and get a suggested approach and price range.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-contact", "Let's Connect", "Contact Apex Solutions", "Have a question, need a solution or want to start a project? We are here to help.") %}
+  <ul class="phero__points">
+    <li>{{ icon("support") }}<span><strong>Quick response</strong>Within one business day</span></li>
+    <li>{{ icon("handshake") }}<span><strong>Expert advice</strong>Talk it through first</span></li>
+    <li>{{ icon("shield") }}<span><strong>Clear terms</strong>Fixed price in writing</span></li>
+  </ul>
+{% endcall %}
+
+<section class="sec sec--snug">
+  <div class="wrap cgrid">
+    <aside class="cpanel">
+      <h2 class="cpanel__h">Our Contact Details</h2>
+      <ul class="cdetails">
+        {% if contact.phone %}<li><span class="cdetails__ic">{{ icon("call") }}</span><span><strong>Phone</strong><a href="tel:{{ contact.phone|replace(' ', '') }}">{{ contact.phone }}</a><small>Mon – Fri: 8:00 AM – 5:00 PM (EAT)</small></span></li>{% endif %}
+        {% if contact.whatsapp %}<li><span class="cdetails__ic">{{ icon("whatsapp") }}</span><span><strong>WhatsApp</strong><a href="https://wa.me/{{ contact.whatsapp }}" rel="noopener">Chat with us instantly</a></span></li>{% endif %}
+        {% if contact.email %}<li><span class="cdetails__ic">{{ icon("mail") }}</span><span><strong>Email</strong><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></span></li>{% endif %}
+        <li><span class="cdetails__ic">{{ icon("pin") }}</span><span><strong>Where we work</strong>{{ contact.location }}</span></li>
+        <li><span class="cdetails__ic">{{ icon("clock") }}</span><span><strong>Office hours</strong>Monday to Friday, 8:00 AM to 5:00 PM (EAT)</span></li>
+      </ul>
+    </aside>
+
+    <div class="cpanel cpanel--form">
+      <h2 class="cpanel__h">Send Us a Message</h2>
+      <form class="form" method="post" action="{{ url_for('site.contact') }}" novalidate>
+        {{ form.csrf_token }}
+        {% if form.errors %}<div class="alert" role="alert">Please check the highlighted fields and try again.</div>{% endif %}
+        <div class="form__grid">
+          {{ field(form.name, ic="users") }}
+          {{ field(form.email, ic="mail") }}
+          {{ field(form.phone, ic="call") }}
+          {{ field(form.organisation, ic="briefcase") }}
+          {{ field(form.service) }}
+          {{ field(form.budget) }}
+          {{ field(form.message, wide=True) }}
+        </div>
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          {{ form.website(tabindex="-1", autocomplete="off") }}
+        </div>
+        <div class="consent{% if form.consent.errors %} has-error{% endif %}">
+          {{ form.consent() }}
+          <label for="consent">I agree that Apex Solutions may use these details to reply to my enquiry, as described in the <a href="{{ url_for('site.privacy') }}">privacy notice</a>.</label>
+          {% if form.consent.errors %}<p class="err">{{ form.consent.errors[0] }}</p>{% endif %}
+        </div>
+        <button class="btn btn--primary btn--lg btn--block" type="submit">{{ icon("send", "ic ic--sm") }} Send Message</button>
+      </form>
+    </div>
+
+    <aside class="cside">
+      <div class="cpanel">
+        <h2 class="cpanel__h">What Happens Next</h2>
+        <ol class="next-steps">
+          <li><span>1</span>We reply with a few questions about your business.</li>
+          <li><span>2</span>We meet, in person or online, to understand how you work.</li>
+          <li><span>3</span>You receive a written proposal with three packages and the total including VAT.</li>
+        </ol>
+      </div>
+      <div class="cbook">
+        <span class="cbook__ic">{{ icon("calendar") }}</span>
+        <div>
+          <h3>Book a consultation</h3>
+          <p>Schedule a meeting with us to discuss your needs. Choose "Something else / not sure" if you are still deciding.</p>
+          <a class="btn btn--outline btn--sm" href="{{ url_for('site.contact', service='other') }}#name">Book Now {{ icon("next", "ic ic--xs") }}</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{{ cta_band("Let's build something together", "Partner with Apex Solutions for innovative, secure and scalable technology solutions.", "rocket", "Start a Project", url_for('site.contact') ~ '#name', whatsapp=True) }}
+{% endblock %}

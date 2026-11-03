@@ -1,0 +1,10 @@
+{% extends "dash_base.html" %}
+{% block title %}Activity log{% endblock %}
+{% block heading %}<h1>Activity log</h1>{% endblock %}
+{% block content %}
+<section class="card">
+  <p class="muted">Sign-ins, failed attempts, uploads, downloads and admin changes. Times are UTC.</p>
+  {% include "admin/_activity_table.html" %}
+  {% include "admin/_pager.html" %}
+</section>
+{% endblock %}

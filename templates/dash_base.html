@@ -1,0 +1,56 @@
+{% from "macros.html" import icon with context %}<!doctype html>
+<html lang="en-KE" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{% block title %}Dashboard{% endblock %} — Apex Solutions</title>
+<link rel="icon" href="{{ url_for('static', filename='img/brand/favicon-32.png') }}" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}?v=6">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dash.css') }}?v=4">
+<script src="{{ url_for('static', filename='js/main.js') }}?v=6" defer></script>
+</head>
+<body class="dash">
+<a class="skip" href="#main">Skip to content</a>
+<aside class="dside" id="dside">
+  <a class="dside__logo" href="{{ url_for('site.home') }}" aria-label="Apex Solutions website"><img src="{{ url_for('static', filename='img/brand/logo-light.webp') }}" alt="Apex Solutions" width="771" height="184"></a>
+  <p class="dside__area">{{ "Admin" if current_user.is_admin else "Client portal" }}</p>
+  <nav aria-label="Dashboard">
+    <ul>
+    {% if current_user.is_admin %}
+      {% set items = [("admin.dashboard","grid","Overview","admin.dashboard"),("admin.enquiries","mail","Enquiries","admin.enquir"),("admin.clients","users","Clients","admin.client"),("admin.documents","doc","Documents","admin.document"),("admin.activity","pulse","Activity log","admin.activity")] %}
+    {% else %}
+      {% set items = [("portal.dashboard","doc","My documents","portal.")] %}
+    {% endif %}
+    {% set ep_now = request.endpoint or "" %}
+    {% for ep, ic, label, prefix in items %}
+      <li><a href="{{ url_for(ep) }}" {% if ep_now.startswith(prefix) %}aria-current="page"{% endif %}>{{ icon(ic) }}<span>{{ label }}</span></a></li>
+    {% endfor %}
+      <li><a href="{{ url_for('auth.profile') }}" {% if request.endpoint == 'auth.profile' %}aria-current="page"{% endif %}>{{ icon("users") }}<span>My profile</span></a></li>
+      <li><a href="{{ url_for('auth.change_password') }}" {% if request.endpoint == 'auth.change_password' %}aria-current="page"{% endif %}>{{ icon("key") }}<span>Change password</span></a></li>
+    </ul>
+  </nav>
+  <a class="dside__site" href="{{ url_for('site.home') }}">{{ icon("globe", "ic ic--sm") }} View website</a>
+</aside>
+<div class="dmain">
+  <header class="dtop">
+    <button class="dtop__menu nav-toggle" type="button" aria-expanded="false" aria-controls="dside">{{ icon("menu") }}<span>Menu</span></button>
+    <div class="dtop__title">{% block heading %}{% endblock %}</div>
+    <div class="dtop__user">
+      <a class="dtop__me" href="{{ url_for('auth.profile') }}" title="My profile">
+        <span class="dtop__avatar" aria-hidden="true">{{ current_user.name[:1]|upper }}</span>
+        <span class="dtop__who">{{ current_user.name }}</span>
+      </a>
+      <form method="post" action="{{ url_for('auth.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn--outline btn--sm" type="submit">Sign out</button>
+      </form>
+    </div>
+  </header>
+  <main id="main" class="dcontent">
+    {% with msgs = get_flashed_messages(with_categories=true) %}{% for cat, m in msgs %}<div class="flash flash--{{ cat }}" role="status">{{ m }}</div>{% endfor %}{% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+</body>
+</html>

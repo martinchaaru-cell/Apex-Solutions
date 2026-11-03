@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — Apex Solutions{% endblock %}
+{% block body_class %}no-cta{% endblock %}
+{% block content %}
+<section class="page-hero page-hero--center">
+  <div class="wrap narrow">
+    <p class="err-code">Error {{ code }}</p>
+    <h1>{{ title }}</h1>
+    <p class="lede">{{ message }}</p>
+    <div class="actions actions--center">
+      <a class="btn btn--primary" href="{{ url_for('site.home') }}">Go to the home page</a>
+      <a class="btn btn--outline" href="{{ url_for('site.contact') }}">Contact us</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

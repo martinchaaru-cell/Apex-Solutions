@@ -1,0 +1,11 @@
+{% set rows = activity if activity is defined else page.items %}
+{% if rows %}
+<div class="dtable-wrap"><table class="dtable">
+  <thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Event</th><th scope="col">Detail</th></tr></thead>
+  <tbody>
+  {% for a in rows %}
+    <tr><td>{{ a.at.strftime('%d %b %Y, %H:%M') }}</td><td>{{ a.user.name if a.user else "Visitor" }}</td><td>{{ a.action|replace('_', ' ')|capitalize }}</td><td class="muted">{{ a.target or "" }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% else %}<p class="empty-note">No activity recorded yet.</p>{% endif %}

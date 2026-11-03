@@ -1,0 +1,13 @@
+.env
+*.db
+instance/
+__pycache__/
+*.pyc
+.pytest_cache/
+backups/
+*.sql
+*.sql.gz
+*.gpg
+.venv/
+.replit-deps-installed
+.secret_key

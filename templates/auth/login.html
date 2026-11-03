@@ -1,0 +1,16 @@
+{% extends "auth/_layout.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<h1>Sign in</h1>
+<p class="muted">For Apex Solutions clients and staff.</p>
+{% if expired %}<div class="flash flash--info" role="status">Your session ended. Please sign in again.</div>{% endif %}
+{% if error %}<div class="alert" role="alert">{{ error }}</div>{% endif %}
+<form method="post" class="form" novalidate>
+  {{ form.csrf_token }}
+  {{ field(form.email, ic="mail") }}
+  {{ field(form.password, ic="lock") }}
+  <button class="btn btn--primary btn--lg btn--block" type="submit">Sign in</button>
+</form>
+<p class="auth__alt"><a href="{{ url_for('auth.forgot') }}">Forgot your password?</a></p>
+<p class="muted small">No account? Apex creates client accounts when a project starts. <a href="{{ url_for('site.contact') }}">Contact us</a>.</p>
+{% endblock %}

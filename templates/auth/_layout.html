@@ -1,0 +1,27 @@
+{% from "macros.html" import icon, field with context %}<!doctype html>
+<html lang="en-KE" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>{% block title %}Sign in{% endblock %} — Apex Solutions</title>
+<link rel="icon" href="{{ url_for('static', filename='img/brand/favicon-32.png') }}" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}?v=6">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dash.css') }}?v=4">
+<script src="{{ url_for('static', filename='js/main.js') }}?v=6" defer></script>
+</head>
+<body class="authpage">
+<main id="main" class="auth">
+  <div class="auth__panel">
+    <a class="auth__logo" href="{{ url_for('site.home') }}"><img src="{{ url_for('static', filename='img/brand/logo.webp') }}" alt="Apex Solutions" width="771" height="184"></a>
+    {% with msgs = get_flashed_messages(with_categories=true) %}{% for cat, m in msgs %}<div class="flash flash--{{ cat }}" role="status">{{ m }}</div>{% endfor %}{% endwith %}
+    {% block content %}{% endblock %}
+    <p class="auth__back"><a href="{{ url_for('site.home') }}">Back to the website</a></p>
+  </div>
+  <div class="auth__art" aria-hidden="true">
+    <img src="{{ url_for('static', filename='img/site/hero-trust.webp') }}" alt="" width="495" height="366">
+    <div class="auth__quote"><strong>Your documents, kept private.</strong><span>Each file is shared only with the people who need it, and every download is recorded.</span></div>
+  </div>
+</main>
+</body>
+</html>

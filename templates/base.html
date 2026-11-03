@@ -1,0 +1,126 @@
+{% from "macros.html" import icon with context %}<!doctype html>
+<html lang="en-KE" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Apex Solutions{% endblock %}</title>
+<meta name="description" content="{% block description %}Apex Solutions builds business systems, POS, websites, AI and payment integrations for Kenyan organisations, then hosts and maintains them.{% endblock %}">
+<link rel="canonical" href="{{ site_url }}{{ request.path }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0B1F44">
+<link rel="icon" href="{{ url_for('static', filename='img/brand/favicon-32.png') }}" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='img/brand/apple-touch-icon.png') }}">
+<link rel="preload" href="{{ url_for('static', filename='fonts/plus-jakarta-sans-latin-800-normal.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}?v=6">
+<script src="{{ url_for('static', filename='js/main.js') }}?v=6" defer></script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hdr">
+  <div class="wrap hdr__in">
+    <a class="brand" href="{{ url_for('site.home') }}" aria-label="Apex Solutions home">
+      <img class="brand__logo" src="{{ url_for('static', filename='img/brand/logo.webp') }}" alt="Apex Solutions" width="771" height="184">
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{{ icon("menu") }}<span>Menu</span></button>
+
+    <nav id="site-nav" class="nav" aria-label="Main">
+      <ul class="nav__list">
+        <li><a href="{{ url_for('site.home') }}" {% if request.endpoint == 'site.home' %}aria-current="page"{% endif %}>Home</a></li>
+        <li>
+          <details class="dd">
+            <summary {% if request.endpoint in ['site.solutions','site.solution'] %}class="is-current"{% endif %}>Solutions {{ icon("chev", "ic ic--sm") }}</summary>
+            <div class="dd__panel dd__panel--wide">
+              {% for s in nav_solutions %}
+              <a href="{{ url_for('site.solution', slug=s.slug) }}" class="dd__item">{{ icon(s.icon) }}<span><strong>{{ s.nav_title }}</strong><small>{{ s.availability }}</small></span></a>
+              {% endfor %}
+              <a class="dd__all" href="{{ url_for('site.solutions') }}">All solutions {{ icon("next", "ic ic--xs") }}</a>
+            </div>
+          </details>
+        </li>
+        <li>
+          <details class="dd">
+            <summary {% if request.endpoint in ['site.industry','site.industries'] %}class="is-current"{% endif %}>Industries {{ icon("chev", "ic ic--sm") }}</summary>
+            <div class="dd__panel">
+              {% for i in nav_industries %}
+              <a href="{{ url_for('site.industry', slug=i.slug) }}" class="dd__item">{{ icon(i.icon) }}<span><strong>{{ i.title }}</strong></span></a>
+              {% endfor %}
+              <a class="dd__all" href="{{ url_for('site.industries') }}">All industries {{ icon("next", "ic ic--xs") }}</a>
+            </div>
+          </details>
+        </li>
+        <li><a href="{{ url_for('site.our_work') }}" {% if request.endpoint in ['site.our_work','site.case_study'] %}aria-current="page"{% endif %}>Our Work</a></li>
+        <li>
+          <details class="dd">
+            <summary {% if request.endpoint in ['site.how_we_work','site.about','site.trust'] %}class="is-current"{% endif %}>Company {{ icon("chev", "ic ic--sm") }}</summary>
+            <div class="dd__panel">
+              <a href="{{ url_for('site.about') }}" class="dd__item">{{ icon("flag") }}<span><strong>About Apex</strong><small>Who we are and what we stand for</small></span></a>
+              <a href="{{ url_for('site.how_we_work') }}" class="dd__item">{{ icon("flow") }}<span><strong>How We Work</strong><small>Our delivery process</small></span></a>
+              <a href="{{ url_for('site.trust') }}" class="dd__item">{{ icon("shield") }}<span><strong>Trust &amp; Security</strong><small>How we protect your data</small></span></a>
+            </div>
+          </details>
+        </li>
+        <li><a href="{{ url_for('site.pricing') }}" {% if request.endpoint == 'site.pricing' %}aria-current="page"{% endif %}>Pricing</a></li>
+        <li><a href="{{ url_for('site.contact') }}" {% if request.endpoint == 'site.contact' %}aria-current="page"{% endif %}>Contact</a></li>
+      </ul>
+      {% if current_user %}
+      <a class="nav__login" href="{{ url_for('admin.dashboard') if current_user.is_admin else url_for('portal.dashboard') }}">{{ icon("users", "ic ic--sm") }} My dashboard</a>
+      {% else %}
+      <a class="nav__login" href="{{ url_for('auth.login') }}">{{ icon("lock", "ic ic--sm") }} Log in</a>
+      {% endif %}
+      <a class="btn btn--primary nav__cta" href="{{ url_for('site.contact') }}">Get a Quote {{ icon("next", "ic ic--xs") }}</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div class="ftr__brand">
+      <a class="brand brand--light" href="{{ url_for('site.home') }}" aria-label="Apex Solutions home">
+        <img class="brand__logo" src="{{ url_for('static', filename='img/brand/logo-light.webp') }}" alt="Apex Solutions" width="771" height="184" loading="lazy">
+      </a>
+      <p>Technology that moves your business forward. Software, POS, websites, AI and data solutions, hosted and maintained after launch.</p>
+      <p class="ftr__loc">{{ icon("pin", "ic ic--sm") }} {{ contact.location }}</p>
+    </div>
+    <div>
+      <h3>Solutions</h3>
+      <ul>{% for s in nav_solutions %}<li><a href="{{ url_for('site.solution', slug=s.slug) }}">{{ s.nav_title }}</a></li>{% endfor %}</ul>
+    </div>
+    <div>
+      <h3>Company</h3>
+      <ul>
+        <li><a href="{{ url_for('site.about') }}">About Apex</a></li>
+        <li><a href="{{ url_for('site.how_we_work') }}">How We Work</a></li>
+        <li><a href="{{ url_for('site.trust') }}">Trust &amp; Security</a></li>
+        <li><a href="{{ url_for('site.our_work') }}">Our Work</a></li>
+        <li><a href="{{ url_for('site.industries') }}">Industries</a></li>
+        <li><a href="{{ url_for('site.pricing') }}">Pricing</a></li>
+        <li><a href="{{ url_for('auth.login') }}">Client login</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <ul class="ftr__contact">
+        {% if contact.email %}<li><a href="mailto:{{ contact.email }}">{{ icon("mail", "ic ic--sm") }} {{ contact.email }}</a></li>{% endif %}
+        {% if contact.phone %}<li><a href="tel:{{ contact.phone|replace(' ', '') }}">{{ icon("call", "ic ic--sm") }} {{ contact.phone }}</a></li>{% endif %}
+        {% if contact.whatsapp %}<li><a href="https://wa.me/{{ contact.whatsapp }}" rel="noopener">{{ icon("whatsapp", "ic ic--sm") }} WhatsApp</a></li>{% endif %}
+        <li><a href="{{ url_for('site.contact') }}">{{ icon("doc", "ic ic--sm") }} Enquiry form</a></li>
+      </ul>
+      <p class="ftr__note">We reply within one business day with questions and a price range.</p>
+      <a class="btn btn--ghost-light btn--sm" href="{{ url_for('site.contact') }}">Get a Quote {{ icon("next", "ic ic--xs") }}</a>
+    </div>
+  </div>
+  <div class="wrap ftr__base">
+    <p>&copy; {{ year }} Apex Solutions. Prices exclude VAT.</p>
+    <p><a href="{{ url_for('site.privacy') }}">Privacy notice</a><a href="{{ url_for('site.terms') }}">Terms of use</a></p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "dash_base.html" %}
+{% block title %}Sign-in link{% endblock %}
+{% block heading %}<p class="crumb"><a href="{{ url_for('admin.clients') }}">Clients</a> /</p><h1>{{ "Account created" if purpose == "setup" else "Password reset link" }}</h1>{% endblock %}
+{% block content %}
+<section class="card card--narrow">
+  <h2>{{ client.name }}</h2>
+  {% if emailed %}<p class="flash flash--ok">We emailed this link to {{ client.email }}.</p>{% endif %}
+  <p>Send this link to {{ client.name }} so they can {{ "choose their password" if purpose == "setup" else "choose a new password" }}. It works once and expires in {{ config.SETUP_LINK_HOURS ~ " hours" if purpose == "setup" else config.RESET_LINK_MINUTES ~ " minutes" }}.</p>
+  <label class="field" for="link"><span class="sr-only">One-time link</span></label>
+  <input class="linkbox" id="link" type="text" value="{{ link }}" readonly>
+  <p class="muted small">This link is shown only once. Share it privately, for example by WhatsApp or email to the client directly. If it expires, create a new one from the client's page.</p>
+  <div class="quick"><a class="btn btn--primary" href="{{ url_for('admin.client', uid=client.id) }}">Go to client</a><a class="btn btn--outline" href="{{ url_for('admin.clients') }}">All clients</a></div>
+</section>
+{% endblock %}

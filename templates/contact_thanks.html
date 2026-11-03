@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Enquiry sent — Apex Solutions{% endblock %}
+{% block body_class %}no-cta{% endblock %}
+{% block content %}
+<section class="page-hero page-hero--center">
+  <div class="wrap narrow">
+    <h1>Enquiry sent</h1>
+    <p class="lede">Thank you. We have received your message and will reply within one business day.</p>
+    <div class="actions actions--center">
+      <a class="btn btn--primary" href="{{ url_for('site.our_work') }}">See our work</a>
+      <a class="btn btn--outline" href="{{ url_for('site.home') }}">Back to home</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+# Pinned (Baseline I1). Each package and its purpose:
+Flask==3.1.3              # web framework
+Werkzeug==3.1.9           # Flask's HTTP layer
+Flask-WTF==1.3.0          # forms and CSRF protection
+WTForms==3.3.2            # form validation
+email-validator==2.3.0    # email address validation
+Flask-SQLAlchemy==3.1.1   # database access (parameterised queries only)
+SQLAlchemy==2.1.6
+Flask-Limiter==4.1.1      # rate limiting on the enquiry form
+psycopg[binary]==3.3.6    # PostgreSQL driver
+gunicorn==26.2.0          # production server
+click
+flask
+flask-limiter
+flask-sqlalchemy
+flask-wtf
+werkzeug
+wtforms

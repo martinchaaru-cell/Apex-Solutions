@@ -1,0 +1,20 @@
+{% extends "dash_base.html" %}
+{% from "macros.html" import field with context %}
+{% block title %}My profile{% endblock %}
+{% block heading %}<h1>My profile</h1>{% endblock %}
+{% block content %}
+<section class="card card--narrow">
+  <form method="post" class="form" novalidate>
+    {{ form.csrf_token }}
+    {{ field(form.name, ic="users") }}
+    {{ field(form.organisation, ic="briefcase") }}
+    <div class="field">
+      <label>Email address</label>
+      <p class="muted">{{ current_user.email }}</p>
+      <p class="muted small">{% if current_user.is_admin %}The sign-in email is fixed. To use a different one, create a new admin account for it from the Shell.{% else %}To change your sign-in email, please contact Apex Solutions.{% endif %}</p>
+    </div>
+    <button class="btn btn--primary btn--block" type="submit">Save profile</button>
+  </form>
+  <p class="small"><a href="{{ url_for('auth.change_password') }}">Change password</a></p>
+</section>
+{% endblock %}

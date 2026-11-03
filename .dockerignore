@@ -1,0 +1,15 @@
+.env
+.git
+*.db
+instance/
+__pycache__/
+.pytest_cache/
+tests/
+.replit
+scripts/
+docs/
+security/
+backups/
+.github/
+.replit-deps-installed
+.secret_key

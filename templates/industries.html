@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, photo_hero, cta_band with context %}
+{% block title %}Industries — Apex Solutions{% endblock %}
+{% block description %}Technology solutions for retail, hospitality, education, healthcare, corporate services, NGOs and finance in Kenya.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-individual", "Industries", "Tailored solutions for every sector", "The same disciplined process, adapted to how your sector works: its rules, its peak seasons and the data it must protect.") %}
+  <div class="actions"><a class="btn btn--primary btn--lg" href="{{ url_for('site.contact') }}">Talk to Our Team {{ icon("next", "ic ic--xs") }}</a></div>
+{% endcall %}
+
+<section class="sec sec--snug">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Industries we serve</h2>
+      <p>Choose your sector to see the systems we build for it.</p>
+    </div>
+    <ul class="ind-grid">
+      {% for name, img, slug, desc in c.INDUSTRY_TILES %}
+      <li class="ind-card" id="{{ name|slug }}">
+        <img src="{{ url_for('static', filename='img/site/' ~ img ~ '.webp') }}" alt="" loading="lazy" width="136" height="74">
+        <div class="ind-card__body">
+          <h3>{{ name }}</h3>
+          <p>{{ desc }}</p>
+          {% if slug %}<a href="{{ url_for('site.industry', slug=slug) }}">See {{ name|lower }} solutions {{ icon("next", "ic ic--xs") }}</a>
+          {% else %}<a href="{{ url_for('site.contact') }}">Discuss your project {{ icon("next", "ic ic--xs") }}</a>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{{ cta_band("Don't see your sector?", "Most of our work starts with a business problem, not an industry label. Tell us what you need to fix.", "compass", "Contact Us") }}
+{% endblock %}

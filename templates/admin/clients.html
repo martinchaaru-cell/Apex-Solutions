@@ -1,0 +1,26 @@
+{% extends "dash_base.html" %}
+{% block title %}Clients{% endblock %}
+{% block heading %}<h1>Clients</h1>{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <p class="muted">Client accounts can sign in to download documents you share with them.</p>
+  <a class="btn btn--primary btn--sm" href="{{ url_for('admin.client_new') }}">{{ icon("users", "ic ic--sm") }} Add a client</a>
+</div>
+<section class="card">
+  {% if clients %}
+  <div class="dtable-wrap"><table class="dtable">
+    <thead><tr><th scope="col">Name</th><th scope="col">Organisation</th><th scope="col">Account</th><th scope="col">Last sign-in</th></tr></thead>
+    <tbody>
+    {% for u in clients %}
+      <tr>
+        <td><a href="{{ url_for('admin.client', uid=u.id) }}"><strong>{{ u.name }}</strong></a><br><small class="muted">{{ u.email }}</small></td>
+        <td>{{ u.organisation or "—" }}</td>
+        <td>{% if not u.is_active %}<span class="st st--lost">Disabled</span>{% elif not u.is_set_up %}<span class="st st--proposal-sent">Invited</span>{% else %}<span class="st st--won">Active</span>{% endif %}</td>
+        <td>{{ u.last_login_at.strftime('%d %b %Y') if u.last_login_at else "Never" }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<p class="empty-note">No clients yet. Add a client to give them a sign-in link.</p>{% endif %}
+</section>
+{% endblock %}

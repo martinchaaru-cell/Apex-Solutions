@@ -1,0 +1,26 @@
+# Replace the domain. Caddy gets and renews the TLS certificate automatically (Baseline E1).
+apexsolutions.co.ke, www.apexsolutions.co.ke {
+	@www host www.apexsolutions.co.ke
+	redir @www https://apexsolutions.co.ke{uri} permanent
+
+	encode zstd gzip
+
+	header {
+		# Turn on HSTS only after launch testing is complete (Baseline E1).
+		# Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	# Static files cached for a week; filenames are versioned with ?v=
+	@static path /static/*
+	header @static Cache-Control "public, max-age=604800"
+
+	reverse_proxy web:8000 {
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

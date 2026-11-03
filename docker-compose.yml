@@ -1,0 +1,44 @@
+# Only Caddy publishes ports. The database and app are on the private network (Baseline H3).
+services:
+  web:
+    build: .
+    env_file: .env
+    depends_on: [db, redis]
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp]
+    volumes: [appdata:/app/instance]   # uploaded documents (private, outside the web root)
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  db:
+    image: postgres:16.10-bookworm
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-apex}
+      POSTGRES_USER: ${POSTGRES_USER:-apex}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    restart: unless-stopped
+
+  redis:
+    # Shared store so the enquiry rate limit works across all Gunicorn workers.
+    image: redis:7.4.6-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.10.2
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [web]
+    restart: unless-stopped
+
+volumes:
+  pgdata: {}
+  appdata: {}
+  caddy_data: {}
+  caddy_config: {}

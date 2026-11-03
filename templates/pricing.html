@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, price_table, hosting_table, photo_hero, cta_band with context %}
+{% block title %}Pricing — Apex Solutions{% endblock %}
+{% block description %}Starting prices for every Apex service: software, POS, websites, AI, data, cloud, integrations, hosting and maintenance. All prices in KES, excluding VAT.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-pricing", "Pricing & Packages", "Transparent pricing. Real value.", "Choose a starting point or request a custom quote. Every proposal gives a fixed price with three package options and shows the total including VAT.") %}
+  <div class="actions">
+    <a class="btn btn--primary btn--lg" href="#packages">View Packages {{ icon("chev", "ic ic--xs") }}</a>
+    <a class="btn btn--outline btn--lg" href="{{ url_for('site.contact') }}">Request Custom Quote</a>
+  </div>
+{% endcall %}
+
+<section class="sec sec--snug" id="packages">
+  <div class="wrap">
+    <div class="pkgs">
+      {% for p in c.PRICE_STARTERS %}
+      <article class="pkg{% if p.featured %} pkg--featured{% endif %}">
+        {% if p.featured %}<p class="pkg__flag">Most requested</p>{% endif %}
+        <div class="pkg__head">
+          <span class="pkg__ic">{{ icon(p.icon) }}</span>
+          <div><h2>{{ p.name }}</h2><p>{{ p.for }}</p></div>
+        </div>
+        <p class="pkg__price">KES {{ p.price }}+</p>
+        <p class="pkg__unit">One-time build, excl. VAT</p>
+        <ul>{% for pt in p.points %}<li>{{ icon("check", "ic ic--sm") }} {{ pt }}</li>{% endfor %}</ul>
+        <a class="btn {{ 'btn--primary' if p.featured else 'btn--outline' }}" href="{{ url_for('site.solution', slug=p.slug) }}#prices">See all {{ p.short }} prices {{ icon("next", "ic ic--xs") }}</a>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="pfoot">
+      <div class="pfoot__custom">
+        <span class="pfoot__ic">{{ icon("handshake") }}</span>
+        <div>
+          <h3>Need a custom solution?</h3>
+          <p>Complex requirements? Let's discuss your needs and prepare a tailored proposal.</p>
+          <a class="btn btn--primary btn--sm" href="{{ url_for('site.contact') }}">Request a Custom Quote {{ icon("next", "ic ic--xs") }}</a>
+        </div>
+        <img src="{{ url_for('static', filename='img/site/img-desk.webp') }}" alt="" loading="lazy" width="227" height="157">
+      </div>
+      <div class="pfoot__addons">
+        <h3>{{ icon("puzzle", "ic ic--sm") }} Available add-ons</h3>
+        <ul>{% for a in c.ADD_ONS %}<li>{{ icon("check", "ic ic--sm") }} {{ a }}</li>{% endfor %}</ul>
+        <a class="btn btn--outline btn--sm" href="#plans">View Plans {{ icon("next", "ic ic--xs") }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint" id="all-prices">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Full price list</h2>
+      <p>{{ c.VAT_NOTE }}</p>
+    </div>
+    <nav class="jump" aria-label="Jump to a service">
+      {% for s in nav_solutions %}<a href="#{{ s.slug }}">{{ icon(s.icon, "ic ic--sm") }}{{ s.nav_title }}</a>{% endfor %}
+      <a href="#getting-started">{{ icon("doc", "ic ic--sm") }}Getting started</a>
+      <a href="#plans">{{ icon("support", "ic ic--sm") }}Maintenance plans</a>
+    </nav>
+    {% for s in nav_solutions %}
+    <div class="price-block" id="{{ s.slug }}">
+      <h3 class="price-block__h">{{ icon(s.icon) }} {{ s.nav_title }}</h3>
+      {{ price_table(s.prices) }}
+      <p class="more"><a href="{{ url_for('site.solution', slug=s.slug) }}">What is included {{ icon("next", "ic ic--xs") }}</a></p>
+    </div>
+    {% endfor %}
+    <div class="price-block" id="getting-started">
+      <h3 class="price-block__h">{{ icon("doc") }} Getting started and design</h3>
+      {{ price_table(c.GETTING_STARTED) }}
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="plans">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Maintenance plans</h2>
+      <p>Monthly, excluding VAT, on top of a hosting package. Response means we acknowledge the issue and start work within that time.</p>
+    </div>
+    <div class="plans">
+      {% for p in c.MAINTENANCE_PLANS %}
+      <article class="plan{% if p.featured %} plan--featured{% endif %}">
+        {% if p.featured %}<p class="plan__flag">For businesses that trade every day</p>{% endif %}
+        <h3>{{ p.name }}</h3>
+        <p class="plan__best">{{ p.best }}</p>
+        <p class="plan__price"><small>KES</small> {{ p.price }} <small>/ month</small></p>
+        <dl>
+          <div><dt>Included hours</dt><dd>{{ p.hours }}</dd></div>
+          <div><dt>Critical response</dt><dd>{{ p.sev1 }}</dd></div>
+          <div><dt>Cover</dt><dd>{{ p.cover }}</dd></div>
+          <div><dt>Backups</dt><dd>{{ p.backups }}</dd></div>
+          <div><dt>Restore tests</dt><dd>{{ p.restore }}</dd></div>
+        </dl>
+      </article>
+      {% endfor %}
+    </div>
+    <h3 class="sub">Hosting packages</h3>
+    {{ hosting_table(c.HOSTING_PACKAGES) }}
+  </div>
+</section>
+
+<section class="sec sec--tint" id="faq">
+  <div class="wrap narrow">
+    <div class="center-head"><h2>Frequently asked questions</h2></div>
+    <div class="faq">
+      {% for q, a in c.FAQS %}
+      <details><summary>{{ q }}</summary><p>{{ a }}</p></details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band("Ready to take the next step?", "Get in touch for a consultation and a personalised quote.", "rocket", "Contact Us") }}
+{% endblock %}

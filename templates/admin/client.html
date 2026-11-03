@@ -1,0 +1,29 @@
+{% extends "dash_base.html" %}
+{% block title %}{{ client.name }}{% endblock %}
+{% block heading %}<p class="crumb"><a href="{{ url_for('admin.clients') }}">Clients</a> /</p><h1>{{ client.name }}</h1>{% endblock %}
+{% block content %}
+<div class="dgrid dgrid--wide">
+  <section class="card">
+    <div class="card__head"><h2>Documents this client can download</h2><a href="{{ url_for('admin.document_upload') }}">Upload</a></div>
+    {% if docs %}
+    <ul class="rows rows--plain">
+      {% for d in docs %}<li><span class="rows__main"><strong>{{ d.title }}</strong><small>{{ d.extension|upper }}, {{ d.size|filesize }}, {{ "shared with all clients" if d.visibility == "clients" else "shared with this client only" }}</small></span><a class="btn btn--outline btn--sm" href="{{ url_for('admin.document_edit', did=d.id) }}">Edit sharing</a></li>{% endfor %}
+    </ul>
+    {% else %}<p class="empty-note">Nothing shared yet. Upload a document and choose "One client" or "All clients".</p>{% endif %}
+  </section>
+  <section class="card">
+    <div class="card__head"><h2>Account</h2></div>
+    <dl class="facts facts--one">
+      <div><dt>Email</dt><dd>{{ client.email }}</dd></div>
+      <div><dt>Organisation</dt><dd>{{ client.organisation or "—" }}</dd></div>
+      <div><dt>Status</dt><dd>{% if not client.is_active %}Disabled{% elif not client.is_set_up %}Invited, password not set{% else %}Active{% endif %}</dd></div>
+      <div><dt>Last sign-in</dt><dd>{{ client.last_login_at.strftime('%d %b %Y, %H:%M') if client.last_login_at else "Never" }}</dd></div>
+    </dl>
+    <form method="post" action="{{ url_for('admin.client_link', uid=client.id) }}">{{ form.csrf_token }}
+      <button class="btn btn--outline btn--block" type="submit">{{ "New password reset link" if client.is_set_up else "New sign-in link" }}</button></form>
+    <form method="post" action="{{ url_for('admin.client_toggle', uid=client.id) }}" class="mt">{{ form.csrf_token }}
+      <button class="btn btn--block {{ 'btn--danger' if client.is_active else 'btn--primary' }}" type="submit">{{ "Disable account" if client.is_active else "Enable account" }}</button></form>
+    <p class="muted small">Disabling signs the client out straight away. Their shared documents stay in place.</p>
+  </section>
+</div>
+{% endblock %}

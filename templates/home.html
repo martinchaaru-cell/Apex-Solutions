@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, sol_card, work_card, cta_band with context %}
+{% block title %}Apex Solutions — Technology that moves your business forward{% endblock %}
+{% block content %}
+
+<section class="phero phero--home">
+  <div class="phero__img"><img src="{{ url_for('static', filename='img/site/hero-home.webp') }}" alt="" width="942" height="390" fetchpriority="high"></div>
+  <div class="wrap phero__in">
+    <div class="phero__copy">
+      <p class="kicker">Innovative <span aria-hidden="true">&bull;</span> Secure <span aria-hidden="true">&bull;</span> Scalable</p>
+      <h1>Transform your business with Apex Solutions</h1>
+      <p class="lede">Custom software, powerful systems and expert support to help your business work smarter, grow faster and achieve more.</p>
+      <div class="actions">
+        <a class="btn btn--primary btn--lg" href="{{ url_for('site.solutions') }}">Explore Our Solutions {{ icon("next", "ic ic--xs") }}</a>
+        <a class="btn btn--outline btn--lg" href="{{ url_for('site.our_work') }}">See Our Work</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="points">
+  <div class="wrap">
+    <ul class="points__list">
+      {% for ic, t in c.HERO_POINTS %}<li>{{ icon(ic) }}<span>{{ t }}</span></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="sec sec--snug">
+  <div class="wrap">
+    <div class="center-head">
+      <h2>Our Solutions</h2>
+      <p>Comprehensive technology solutions tailored to your needs.</p>
+    </div>
+    <ul class="tiles">
+      {% for s in nav_solutions %}
+      <li><a class="tile" href="{{ url_for('site.solution', slug=s.slug) }}">{{ icon(s.icon, "ic tile__ic") }}<strong>{{ s.nav_title }}</strong><span>Learn more {{ icon("next", "ic ic--xs") }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="ind-band">
+  <div class="wrap ind-band__in">
+    <div class="ind-band__head">
+      <h2>Industries We Serve</h2>
+      <p>Tailored solutions for every sector.</p>
+    </div>
+    <ul class="ind-tiles">
+      {% for name, img, slug, desc in c.INDUSTRY_TILES %}
+      <li><a class="ind-tile" href="{{ url_for('site.industry', slug=slug) if slug else url_for('site.industries') ~ '#' ~ name|slug }}">
+        <img src="{{ url_for('static', filename='img/site/' ~ img ~ '.webp') }}" alt="" loading="lazy" width="136" height="74"><span>{{ name }}</span></a></li>
+      {% endfor %}
+    </ul>
+    <a class="btn btn--ghost-light" href="{{ url_for('site.industries') }}">Explore Industries {{ icon("next", "ic ic--xs") }}</a>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="center-head">
+      <h2>Start with the problem, not the software</h2>
+      <p>Most of our work begins with one of these.</p>
+    </div>
+    <div class="problems">
+      {% for ic, q, a, slug in c.HOME_PROBLEMS %}
+      <a class="problem" href="{{ url_for('site.solution', slug=slug) }}">
+        <span class="problem__ic">{{ icon(ic) }}</span>
+        <span class="problem__q">{{ q }}</span>
+        <span class="problem__a">{{ a }}</span>
+        <span class="problem__go">See how we solve it {{ icon("next", "ic ic--xs") }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint">
+  <div class="wrap">
+    <div class="center-head">
+      <h2>How We Work</h2>
+      <p>A simple, transparent and proven process, from discovery to ongoing support.</p>
+    </div>
+    <ol class="steps8">
+      {% for ic, t, d in c.PROCESS %}
+      <li class="step8"><span class="step8__n">{{ loop.index }}</span>{{ icon(ic, "ic step8__ic") }}<strong>{{ t }}</strong><span>{{ d }}</span></li>
+      {% endfor %}
+    </ol>
+    <p class="center-more"><a class="btn btn--outline" href="{{ url_for('site.how_we_work') }}">See our full process {{ icon("next", "ic ic--xs") }}</a></p>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="center-head">
+      <h2>Our Work</h2>
+      <p>Real projects, each shown with its true status.</p>
+    </div>
+    <div class="wgrid">
+      {% for w in work[:3] %}{{ work_card(w) }}{% endfor %}
+    </div>
+    <p class="center-more"><a class="btn btn--outline" href="{{ url_for('site.our_work') }}">View all projects {{ icon("next", "ic ic--xs") }}</a></p>
+  </div>
+</section>
+
+<section class="sec sec--tint">
+  <div class="wrap trust-split">
+    <div class="trust-split__img"><img src="{{ url_for('static', filename='img/site/hero-trust.webp') }}" alt="" loading="lazy" width="495" height="366"></div>
+    <div>
+      <p class="chip-label">Trust &amp; Security</p>
+      <h2>Your trust. Our priority.</h2>
+      <p class="lede">Every Apex system is built to the Apex Security Baseline, a written standard for logins, permissions, payments, servers and backups. Each control is tested before go-live and you receive the evidence.</p>
+      <ul class="checks">
+        {% for t, d in c.SECURITY_POINTS[:4] %}<li>{{ icon("tick", "ic ic--sm") }} {{ t }}</li>{% endfor %}
+      </ul>
+      <a class="btn btn--primary" href="{{ url_for('site.trust') }}">{{ icon("shield", "ic ic--sm") }} Our Security Measures</a>
+    </div>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="wrap">
+    <div class="proof__in">
+      {% for ic, t, d in c.PROOF_STRIP %}
+      <div class="proof__item">{{ icon(ic) }}<span><strong>{{ t }}</strong>{{ d }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band("Let's build your perfect solution", "Partner with Apex Solutions for innovative, secure and scalable technology solutions.", "bulb", "Contact Us", whatsapp=True) }}
+{% endblock %}

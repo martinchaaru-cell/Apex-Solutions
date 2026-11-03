@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, photo_hero, cta_band with context %}
+{% block title %}How We Work — Apex Solutions{% endblock %}
+{% block description %}From discovery and a signed blueprint to security-tested go-live and ongoing support: how Apex Solutions delivers every project.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-how", "Our Process", "How We Work", "A simple, transparent and proven process to turn your ideas into powerful solutions. From discovery to ongoing support, we keep you informed, involved and confident at every step.") %}
+  <div class="actions"><a class="btn btn--primary btn--lg" href="{{ url_for('site.contact') }}">Start Your Project {{ icon("next", "ic ic--xs") }}</a></div>
+{% endcall %}
+
+<section class="sec sec--snug">
+  <div class="wrap">
+    <ol class="steps8 steps8--cards">
+      {% for ic, t, d in c.PROCESS %}
+      <li class="step8"><span class="step8__n">{{ loop.index }}</span>{{ icon(ic, "ic step8__ic") }}<strong>{{ t }}</strong><span>{{ d }}</span></li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="sec sec--flush">
+  <div class="wrap trio">
+    <div class="trio__item">
+      <img src="{{ url_for('static', filename='img/site/img-laptop-check.webp') }}" alt="" loading="lazy" width="206" height="154">
+      <div><h3>A customer-focused approach</h3><p>Your success is our priority. We work closely with you, communicate clearly and deliver solutions that meet the criteria you signed.</p></div>
+    </div>
+    <div class="trio__item">
+      <img src="{{ url_for('static', filename='img/site/svc-security.webp') }}" alt="" loading="lazy" width="130" height="167">
+      <div><h3>Built with security in mind</h3><p>Security is at the core of everything we do, with a written baseline that every system must pass before launch.</p></div>
+    </div>
+    <div class="trio__item">
+      <img src="{{ url_for('static', filename='img/site/img-handshake.webp') }}" alt="" loading="lazy" width="191" height="152">
+      <div><h3>Long-term partnership</h3><p>We are not just a vendor. We host, maintain and grow your system with you after launch.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint">
+  <div class="wrap split-why">
+    <div>
+      <h2>Agreed in writing</h2>
+      <p class="lede">Before a deposit is taken, we both sign a Software Development Agreement. Your proposal becomes its scope and fee schedules.</p>
+      <ul class="checks">
+        <li>{{ icon("tick", "ic ic--sm") }} Payment in three stages: 50% on signing, 30% on staging approval, 20% before go-live</li>
+        <li>{{ icon("tick", "ic ic--sm") }} Two rounds of design changes and one of code changes included</li>
+        <li>{{ icon("tick", "ic ic--sm") }} Changes outside the scope are quoted before any work starts</li>
+        <li>{{ icon("tick", "ic ic--sm") }} Go-live is planned outside your busiest trading periods</li>
+        <li>{{ icon("tick", "ic ic--sm") }} You own the custom work once it is paid for</li>
+      </ul>
+    </div>
+    <aside class="why-panel">
+      <h3>What we need from you</h3>
+      <ul>
+        <li>{{ icon("check", "ic ic--sm") }} One person who can make decisions</li>
+        <li>{{ icon("check", "ic ic--sm") }} Content and data within three business days of a request</li>
+        <li>{{ icon("check", "ic ic--sm") }} Access to M-Pesa, eTIMS, SMS and hosting accounts in week one</li>
+        <li>{{ icon("check", "ic ic--sm") }} Someone to test the staging system for seven business days</li>
+      </ul>
+      <p class="small">We use modern AI tools to speed up design and coding. Every module is then reviewed and tested by us, and your confidential or personal data never goes into AI tools.</p>
+    </aside>
+  </div>
+</section>
+
+{{ cta_band("Let's build your solution together", "Get in touch today and let's turn your vision into reality.", "rocket", "Contact Us", whatsapp=True) }}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, work_visual, work_card, cta_band with context %}
+{% block title %}{{ w.title }} — Apex Solutions{% endblock %}
+{% block description %}{{ w.summary }}{% endblock %}
+{% block content %}
+<section class="phero phero--case">
+  <div class="phero__img"><img src="{{ url_for('static', filename='img/site/' ~ w.image ~ '.webp') }}" alt="" width="220" height="175"></div>
+  <div class="wrap phero__in">
+    <div class="phero__copy">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="{{ url_for('site.our_work') }}">Our Work</a><span aria-hidden="true">/</span><span aria-current="page">{{ w.title }}</span></nav>
+      <p class="wcard__meta"><span class="pill">{{ w.category }}</span><span class="status">{{ w.status }}</span></p>
+      <h1>{{ w.title }}</h1>
+      <p class="lede">{{ w.summary }}</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--snug">
+  <div class="wrap case">
+    <div class="case__vis">
+      {% set shot = work_image(w.slug) %}
+      {% if shot %}<img class="shot" src="{{ url_for('static', filename=shot) }}" alt="Screenshot of {{ w.title }}" width="1280" height="800">
+      {% else %}{{ work_visual(w.visual) }}<p class="small">Illustration with sample data. Real screenshots will replace it.</p>{% endif %}
+      <div class="case__facts">
+        <div><span>Category</span><strong>{{ w.category }}</strong></div>
+        <div><span>Status</span><strong>{{ w.status }}</strong></div>
+        <div><span>Technology</span><strong>{{ w.tech|join(', ') }}</strong></div>
+      </div>
+    </div>
+    <div class="case__body">
+      <h2>Who it is for</h2>
+      <p>{{ w.client }}</p>
+      <h2>The challenge</h2>
+      <p>{{ w.challenge }}</p>
+      <h2>What we built</h2>
+      <p>{{ w.solution }}</p>
+      <h2>Key features</h2>
+      <ul class="checks">{% for f in w.features %}<li>{{ icon("tick", "ic ic--sm") }} {{ f }}</li>{% endfor %}</ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint">
+  <div class="wrap">
+    <div class="center-head"><h2>More work</h2></div>
+    <div class="wgrid">
+      {% for o in others[:3] %}{{ work_card(o) }}{% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band("Let's build your success story", "Tell us what you need to fix and we will show you how we would approach it.", "trophy", "Start a Project") }}
+{% endblock %}

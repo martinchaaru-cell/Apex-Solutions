@@ -1,0 +1,29 @@
+{% extends "dash_base.html" %}
+{% from "macros.html" import field with context %}
+{% block title %}Enquiry from {{ e.name }}{% endblock %}
+{% block heading %}<p class="crumb"><a href="{{ url_for('admin.enquiries') }}">Enquiries</a> /</p><h1>{{ e.name }}</h1>{% endblock %}
+{% block content %}
+<div class="dgrid dgrid--wide">
+  <section class="card">
+    <div class="card__head"><h2>Message</h2><span class="muted">{{ e.created_at.strftime('%d %b %Y, %H:%M') }} UTC</span></div>
+    <p class="msg">{{ e.message }}</p>
+    <dl class="facts">
+      <div><dt>Email</dt><dd><a href="mailto:{{ e.email }}">{{ e.email }}</a></dd></div>
+      <div><dt>Phone</dt><dd>{% if e.phone %}<a href="tel:{{ e.phone|replace(' ', '') }}">{{ e.phone }}</a>{% else %}—{% endif %}</dd></div>
+      <div><dt>Organisation</dt><dd>{{ e.organisation or "—" }}</dd></div>
+      <div><dt>Service</dt><dd>{{ services.get(e.service, e.service) }}</dd></div>
+      <div><dt>Budget</dt><dd>{{ budgets.get(e.budget, e.budget) }}</dd></div>
+      <div><dt>Reference</dt><dd class="muted">{{ e.id }}</dd></div>
+    </dl>
+  </section>
+  <section class="card">
+    <div class="card__head"><h2>Status</h2></div>
+    <form method="post" class="form">
+      {{ form.csrf_token }}
+      {{ field(form.status) }}
+      <button class="btn btn--primary btn--block" type="submit">Save status</button>
+    </form>
+    <p class="muted small">Reply by email, then mark the enquiry as contacted. When a proposal is sent, use the Proposal Template from Documents.</p>
+  </section>
+</div>
+{% endblock %}

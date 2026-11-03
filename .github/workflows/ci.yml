@@ -1,0 +1,27 @@
+# Baseline phase 1: every push runs tests, code, dependency and secret scans. A failure blocks merge.
+name: ci
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r requirements-dev.txt
+      - name: Tests
+        run: pytest -q
+      - name: Code scan (Bandit)
+        run: bandit -q -r . -x ./tests
+      - name: Dependency scan (pip-audit)
+        run: pip-audit -r requirements.txt
+      - name: Secret scan (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Dockerfile lint (hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with: { dockerfile: Dockerfile }

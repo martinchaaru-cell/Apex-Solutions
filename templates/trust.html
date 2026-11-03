@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, photo_hero, cta_band with context %}
+{% block title %}Trust &amp; Security — Apex Solutions{% endblock %}
+{% block description %}How Apex Solutions protects your data: the Apex Security Baseline, testing with evidence, backups, access control and Kenyan data protection.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-trust", "Trust & Security", "Your trust. Our priority.", "We are committed to protecting your data, your business and your peace of mind, with a written security standard, testing you can check and support after launch.") %}
+  <div class="actions">
+    <a class="btn btn--primary btn--lg" href="#measures">{{ icon("shield", "ic ic--sm") }} Our Security Measures</a>
+    <a class="btn btn--outline btn--lg" href="#why">Why Trust Apex?</a>
+  </div>
+{% endcall %}
+
+<section class="sec sec--snug" id="measures">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Our Security Commitment</h2>
+      <p>Multiple layers of protection on every system we build.</p>
+    </div>
+    <ul class="commit">
+      {% for ic, t, d in c.SECURITY_COMMITMENTS %}
+      <li class="commit__item"><span class="commit__ic">{{ icon(ic) }}</span><strong>{{ t }}</strong><span>{{ d }}</span></li>
+      {% endfor %}
+    </ul>
+
+    <div class="standards">
+      <div class="standards__head">
+        <h3>Standards we build to</h3>
+        <p>Written, tested and evidenced, not just promised.</p>
+      </div>
+      <ul class="standards__list">
+        {% for ic, t, d in c.STANDARDS %}<li>{{ icon(ic) }}<strong>{{ t }}</strong><span>{{ d }}</span></li>{% endfor %}
+      </ul>
+      <div class="standards__end">{{ icon("handshake") }}<span>A technology partner in Kenya and beyond</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint" id="why">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Why trust Apex?</h2>
+      <p>Three levels of protection, chosen at discovery and written into your agreement.</p>
+    </div>
+    <div class="levels">
+      <div class="level"><span class="level__n">Level 1</span><h3>Content</h3><p>Websites with no logins. Secure headers, TLS, protected forms, hardened server, tested backups.</p></div>
+      <div class="level"><span class="level__n">Level 2</span><h3>Application</h3><p>Systems with logins. Everything in Level 1, plus hashed passwords, permission tests for every page and record, and a second independent code review.</p></div>
+      <div class="level level--dark"><span class="level__n">Level 3</span><h3>High risk</h3><p>POS, payments, school and finance systems. Everything in Level 2, plus manual review of all money and permission code, and an external penetration test through a certified partner.</p></div>
+    </div>
+    <ul class="sec-points">
+      {% for t, d in c.SECURITY_POINTS %}
+      <li>{{ icon("shield") }}<div><strong>{{ t }}</strong><p>{{ d }}</p></div></li>
+      {% endfor %}
+    </ul>
+    <div class="callout">
+      {{ icon("key") }}
+      <div>
+        <strong>Your part in keeping it secure</strong>
+        <ul>{% for r in c.CLIENT_RESPONSIBILITIES %}<li>{{ r }}</li>{% endfor %}</ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ cta_band("Partner with a secure and reliable technology partner", "Build, innovate and grow with confidence.", "shield", "Contact Us") }}
+{% endblock %}

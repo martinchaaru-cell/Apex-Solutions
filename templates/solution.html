@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, price_table, hosting_table, photo_hero, sol_card, cta_band, availability with context %}
+{% block title %}{{ s.nav_title }} — Apex Solutions{% endblock %}
+{% block description %}{{ s.short }}{% endblock %}
+{% block content %}
+{% call photo_hero(s.hero, "Our Solutions", s.nav_title, s.lede) %}
+  <div class="phero__avail">{{ availability(s.availability) }}</div>
+  <div class="actions">
+    <a class="btn btn--primary btn--lg" href="{{ url_for('site.contact', service=s.slug) }}">Get a Quote {{ icon("next", "ic ic--xs") }}</a>
+    <a class="btn btn--outline btn--lg" href="#prices">See Prices</a>
+  </div>
+{% endcall %}
+
+<section class="facts-bar">
+  <div class="wrap">
+    <dl class="facts-bar__list">
+      {% set sp = starting_price(s) %}
+      <div>{{ icon("tag") }}<span><dt>Starting from</dt><dd>{% if sp %}KES {{ sp }}{% else %}Quoted per project{% endif %}</dd></span></div>
+      <div>{{ icon("clock") }}<span><dt>Typical timeline</dt><dd>{{ s.prices[0][3] }}</dd></span></div>
+      <div>{{ icon("shield") }}<span><dt>Security baseline</dt><dd>{{ s.security }}</dd></span></div>
+      <div>{{ icon("support") }}<span><dt>Support after launch</dt><dd>{{ s.support }}</dd></span></div>
+    </dl>
+  </div>
+</section>
+
+{% if s.services %}
+<section class="sec sec--snug svx-sec" id="services">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Our {{ s.nav_title }} services in detail</h2>
+      <p>Choose a service to see what it is, where it is used, what it can do and what it costs.</p>
+    </div>
+    <div class="svx" data-svx>
+      <nav class="svx__nav" aria-label="{{ s.nav_title }} services">
+        <p class="svx__count">{{ s.services|length }} services</p>
+        <ul class="svx__list">
+          {% for v in s.services %}
+          <li><a class="svx__tab" href="#{{ v.slug }}" id="tab-{{ v.slug }}" data-svx-tab="{{ v.slug }}">
+            <span class="svx__tabic">{{ icon(v.icon) }}</span>
+            <span class="svx__tabtxt"><strong>{{ v.name }}</strong><small class="svx__dot svx__dot--{{ 'now' if v.availability == c.NOW else ('consult' if v.availability == c.CONSULT else 'spec') }}">{{ v.availability }}</small></span>
+          </a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+      <div class="svx__panels">
+        {% for v in s.services %}
+        <article class="svx__panel" id="{{ v.slug }}" data-svx-panel aria-labelledby="h-{{ v.slug }}">
+          <header class="svx__head">
+            <span class="svx__headic">{{ icon(v.icon) }}</span>
+            <div>
+              <h3 id="h-{{ v.slug }}">{{ v.name }}</h3>
+              {{ availability(v.availability) }}
+            </div>
+          </header>
+          <p class="svx__what">{{ v.what }}</p>
+          <div class="svx__cols">
+            <div>
+              <h4>Where it is used</h4>
+              <ul class="svx__uses">{% for u in v.uses %}<li>{{ u }}</li>{% endfor %}</ul>
+            </div>
+            <div>
+              <h4>What it can do</h4>
+              <ul class="svx__can">{% for x in v.can %}<li>{{ icon("tick", "ic ic--sm") }}<span>{{ x }}</span></li>{% endfor %}</ul>
+            </div>
+          </div>
+          <div class="svx__example">
+            {{ icon("bulb", "ic") }}
+            <div><h4>Example</h4><p>{{ v.example }}</p></div>
+          </div>
+          <div class="svx__foot">
+            <dl class="svx__facts">
+              <div><dt>Price (KES, excl. VAT)</dt><dd>{{ v.price }}</dd></div>
+              <div><dt>Typical timeline</dt><dd>{{ v.timeline }}</dd></div>
+            </dl>
+            <a class="btn btn--primary" href="{{ url_for('site.contact', service=s.slug, item=v.slug) }}">Get a quote for this {{ icon("next", "ic ic--xs") }}</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    <p class="svx__note">Examples describe typical uses, not specific clients. Final prices come in a written proposal after we understand your needs.</p>
+  </div>
+</section>
+{% endif %}
+
+<section class="sec sec--tint">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>What we deliver</h2>
+      <p>Built around how you work, tested before launch and supported after it.</p>
+    </div>
+    <ul class="fcards">
+      {% for ic, t, d in s.features %}
+      <li class="fcard">{{ icon(ic, "ic fcard__ic") }}<strong>{{ t }}</strong><span>{{ d }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap split-why">
+    <div>
+      <h2>Sound familiar?</h2>
+      <ul class="pain">{% for p in s.problems %}<li>{{ icon("check", "ic ic--sm") }}<span>{{ p }}</span></li>{% endfor %}</ul>
+      <h3 class="sub">Typical projects</h3>
+      <ul class="tags tags--lg">{% for e in s.examples %}<li>{{ e }}</li>{% endfor %}</ul>
+    </div>
+    <aside class="why-panel">
+      <h3>Why choose Apex for {{ s.nav_title }}?</h3>
+      <ul>
+        <li>{{ icon("check", "ic ic--sm") }} Tailored to your business needs</li>
+        <li>{{ icon("check", "ic ic--sm") }} Written blueprint and fixed price</li>
+        <li>{{ icon("check", "ic ic--sm") }} Security tested with evidence</li>
+        <li>{{ icon("check", "ic ic--sm") }} Dedicated ongoing support</li>
+      </ul>
+      <a class="btn btn--navy" href="{{ url_for('site.contact', service=s.slug) }}">Get Started Today {{ icon("next", "ic ic--xs") }}</a>
+    </aside>
+  </div>
+</section>
+
+<section class="sec sec--tint" id="prices">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Services and starting prices</h2>
+      <p>{{ c.VAT_NOTE }} Your exact price comes in a written proposal with three package options.</p>
+    </div>
+    {{ price_table(s.prices) }}
+    {% if s.note %}<p class="note">{{ icon("bulb", "ic ic--sm") }}<span>{{ s.note }}</span></p>{% endif %}
+    {% if s.show_plans %}
+    <h3 class="sub">Monthly hosting packages</h3>
+    {{ hosting_table(c.HOSTING_PACKAGES) }}
+    <p class="more"><a href="{{ url_for('site.pricing') }}#plans">Compare maintenance plans and response times {{ icon("next", "ic ic--xs") }}</a></p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="center-head"><h2>Other solutions</h2></div>
+    <div class="sgrid sgrid--three">
+      {% for o in others[:6] %}{{ sol_card(o) }}{% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band("Let's build your perfect solution", "Partner with Apex Solutions for innovative, secure and scalable technology solutions.", "bulb", "Contact Us", url_for('site.contact', service=s.slug), whatsapp=True) }}
+{% endblock %}

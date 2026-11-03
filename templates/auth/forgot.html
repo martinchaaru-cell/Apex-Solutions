@@ -1,0 +1,17 @@
+{% extends "auth/_layout.html" %}
+{% block title %}Reset your password{% endblock %}
+{% block content %}
+<h1>Reset your password</h1>
+{% if mail_enabled %}
+<p class="muted">Enter your email and we will send you a link to choose a new password.</p>
+<form method="post" class="form" novalidate>
+  {{ form.csrf_token }}
+  {{ field(form.email, ic="mail") }}
+  <button class="btn btn--primary btn--lg btn--block" type="submit">Send reset link</button>
+</form>
+{% else %}
+<p>Contact Apex Solutions and we will send you a new sign-in link directly.</p>
+<p><a class="btn btn--primary" href="{{ url_for('site.contact') }}">Contact us</a></p>
+{% endif %}
+<p class="auth__alt"><a href="{{ url_for('auth.login') }}">Back to sign in</a></p>
+{% endblock %}

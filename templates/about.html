@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, photo_hero with context %}
+{% block title %}About — Apex Solutions{% endblock %}
+{% block description %}Apex Solutions is a technology company helping businesses and institutions across Kenya work smarter with modern, secure software.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-about", "About Apex Solutions", "We build technology that moves businesses forward.", "Apex Solutions is a full-service technology company helping businesses and institutions across Kenya use modern technology to work smarter, grow faster and achieve more.") %}
+  <div class="actions">
+    <a class="btn btn--primary btn--lg" href="{{ url_for('site.solutions') }}">Explore Our Solutions {{ icon("next", "ic ic--xs") }}</a>
+    <a class="btn btn--outline btn--lg" href="{{ url_for('site.how_we_work') }}">How We Work</a>
+  </div>
+{% endcall %}
+
+<section class="sec sec--snug">
+  <div class="wrap about-who">
+    <div>
+      <p class="eyebrow">Who we are</p>
+      <h2>A trusted technology partner for a digital future</h2>
+      <p>We are a team of developers and problem-solvers who care about what technology can do for a business. With deep technical skills and a clear understanding of local needs, we deliver reliable, scalable and secure solutions that create real business value.</p>
+      <p>Too many businesses pay for software that is delivered late, does not match how they work, and has no one to call when it breaks. Apex exists to make good software dependable: agreed in writing, priced clearly, tested properly and supported after launch.</p>
+      <a class="btn btn--primary btn--sm" href="{{ url_for('site.how_we_work') }}">Learn about our approach {{ icon("next", "ic ic--xs") }}</a>
+    </div>
+    <div class="about-who__img"><img src="{{ url_for('static', filename='img/site/hero-individual.webp') }}" alt="" loading="lazy" width="590" height="334"></div>
+    <div class="mv">
+      <div class="mv__card">{{ icon("compass") }}<div><h3>Our mission</h3><p>{{ c.MISSION }}</p></div></div>
+      <div class="mv__card">{{ icon("search") }}<div><h3>Our vision</h3><p>{{ c.VISION }}</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint">
+  <div class="wrap about-row">
+    <div>
+      <p class="eyebrow">What we do</p>
+      <h2>End-to-end technology solutions</h2>
+      <p>From custom software to business systems, we offer a full range of services to meet your digital transformation goals.</p>
+      <a class="btn btn--primary btn--sm" href="{{ url_for('site.solutions') }}">Explore Our Services {{ icon("next", "ic ic--xs") }}</a>
+    </div>
+    <ul class="wwd">
+      {% for s in nav_solutions[:6] %}
+      <li><a href="{{ url_for('site.solution', slug=s.slug) }}">{{ icon(s.icon) }}<span>{{ s.nav_title }}</span></a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap about-row">
+    <div>
+      <p class="eyebrow">Our approach</p>
+      <h2>A proven process for successful delivery</h2>
+      <p>We follow a structured approach so your project is delivered on time, within budget and to the standard you signed.</p>
+      <a class="btn btn--primary btn--sm" href="{{ url_for('site.how_we_work') }}">See Our Process {{ icon("next", "ic ic--xs") }}</a>
+    </div>
+    <ol class="mini-steps">
+      {% for ic, t, d in [("search","Discover","Understand your needs"),("doc","Plan","Design the solution"),("code","Develop","Build and integrate"),("shield","Test","Quality and security"),("rocket","Deploy","Launch and support")] %}
+      <li><span class="mini-steps__n">{{ loop.index }}</span>{{ icon(ic) }}<strong>{{ t }}</strong><span>{{ d }}</span></li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
+<section class="sec sec--tint">
+  <div class="wrap about-row">
+    <div>
+      <p class="eyebrow">Why choose Apex</p>
+      <h2>A partner you can count on</h2>
+      <p>We combine technical skill with a customer-first approach to deliver solutions that make a difference.</p>
+      <a class="btn btn--primary btn--sm" href="{{ url_for('site.contact') }}">Talk to Our Team {{ icon("next", "ic ic--xs") }}</a>
+    </div>
+    <ul class="why4">
+      <li>{{ icon("shield") }}<strong>Security-first development</strong><span>The Apex Security Baseline protects your data.</span></li>
+      <li>{{ icon("handshake") }}<strong>Local expertise</strong><span>Built for Kenyan businesses and institutions.</span></li>
+      <li>{{ icon("support") }}<strong>Ongoing support</strong><span>We are with you beyond launch.</span></li>
+      <li>{{ icon("trophy") }}<strong>Real work</strong><span>Real projects, shown with their true status.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="values-wrap">
+  <div class="wrap">
+    <div class="values">
+      <div class="values__head"><h2>Our values</h2><p>The principles that guide our work.</p></div>
+      <ul class="values__list">
+        {% for ic, t, d in c.VALUES %}<li>{{ icon(ic) }}<strong>{{ t }}</strong><span>{{ d }}</span></li>{% endfor %}
+      </ul>
+      <div class="values__cta">
+        <p>Let's build something that moves your business forward.</p>
+        <a class="btn btn--light" href="{{ url_for('site.contact') }}">Get in Touch {{ icon("next", "ic ic--xs") }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "dash_base.html" %}
+{% from "macros.html" import field with context %}
+{% block title %}{{ "Edit document" if doc else "Upload a document" }}{% endblock %}
+{% block heading %}<p class="crumb"><a href="{{ url_for('admin.documents') }}">Documents</a> /</p><h1>{{ "Edit " ~ doc.title if doc else "Upload a document" }}</h1>{% endblock %}
+{% block content %}
+<section class="card card--narrow">
+  <form method="post" class="form" enctype="multipart/form-data" novalidate>
+    {{ form.csrf_token }}
+    {% if not doc %}
+    <div class="field{% if form.file.errors %} has-error{% endif %}">
+      <label for="file">{{ form.file.label.text }}</label>
+      <input class="filein" id="file" name="file" type="file" accept=".pdf,.docx,.xlsx,.pptx" required>
+      <p class="muted small">Up to {{ config.MAX_DOCUMENT_MB }} MB. Macro-enabled files are not accepted.</p>
+      {% if form.file.errors %}<p class="err">{{ form.file.errors[0] }}</p>{% endif %}
+    </div>
+    {% else %}
+    <p class="muted">File: <strong>{{ doc.original_name }}</strong>, {{ doc.size|filesize }}. To replace the file, delete this document and upload the new version.</p>
+    {% endif %}
+    {{ field(form.title) }}
+    {{ field(form.description) }}
+    {{ field(form.category) }}
+    {{ field(form.visibility) }}
+    <div class="js-client-pick">{{ field(form.client_id) }}</div>
+    <p class="muted small">Admin only: visible to Apex admins. All clients: every client account can download it. One client: only the client you choose.</p>
+    <button class="btn btn--primary btn--block" type="submit">{{ "Save changes" if doc else "Upload document" }}</button>
+  </form>
+</section>
+{% endblock %}

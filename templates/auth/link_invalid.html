@@ -1,0 +1,8 @@
+{% extends "auth/_layout.html" %}
+{% block title %}Link not valid{% endblock %}
+{% block content %}
+<h1>This link is not valid</h1>
+<p>It may have been used already or have expired. Ask Apex Solutions for a new link, or reset your password if your account is already set up.</p>
+<p><a class="btn btn--primary" href="{{ url_for('auth.forgot') }}">Reset password</a></p>
+<p class="auth__alt"><a href="{{ url_for('auth.login') }}">Back to sign in</a></p>
+{% endblock %}

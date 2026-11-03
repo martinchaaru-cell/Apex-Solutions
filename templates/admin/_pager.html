@@ -1,0 +1,7 @@
+{% if page.pages > 1 %}
+<nav class="pager" aria-label="Pages">
+  {% if page.has_prev %}<a class="btn btn--outline btn--sm" href="{{ url_for(request.endpoint, page=page.prev_num, **({'status': status} if status is defined and status else {})) }}">Previous</a>{% endif %}
+  <span>Page {{ page.page }} of {{ page.pages }}</span>
+  {% if page.has_next %}<a class="btn btn--outline btn--sm" href="{{ url_for(request.endpoint, page=page.next_num, **({'status': status} if status is defined and status else {})) }}">Next</a>{% endif %}
+</nav>
+{% endif %}

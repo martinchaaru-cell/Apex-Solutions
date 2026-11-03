@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Terms of use — Apex Solutions{% endblock %}
+{% block body_class %}no-cta{% endblock %}
+{% block content %}
+<section class="page-hero">
+  <div class="wrap narrow">
+    <h1>Terms of use</h1>
+    <p class="lede">The terms for using this website. Projects themselves are governed by a signed Software Development Agreement.</p>
+    <p class="small">Last updated: 2 November 2026</p>
+  </div>
+</section>
+
+<section class="sec sec--tight">
+  <div class="wrap narrow prose">
+    <h2>Information on this site</h2>
+    <p>We keep this website accurate and up to date, but its content is general information, not an offer. Prices are starting ranges in Kenya shillings, exclude 16% VAT and may change. A price is binding only when it appears in a written proposal and a signed agreement.</p>
+
+    <h2>Our work and illustrations</h2>
+    <p>Project descriptions show the real status of each project. Screens marked as samples use made-up names and figures to illustrate what a system can do.</p>
+
+    <h2>Using the site</h2>
+    <p>Please do not try to disrupt the site, test its security without our written permission, or send spam through the enquiry form. To report a security issue, please contact us directly{% if contact.email %} at <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>{% endif %}.</p>
+
+    <h2>Intellectual property</h2>
+    <p>The text, design and logo on this site belong to Apex Solutions. Names of other businesses and products belong to their owners.</p>
+
+    <h2>Liability</h2>
+    <p>To the extent the law allows, we are not liable for loss arising from use of this website. Nothing here limits liability that cannot lawfully be limited.</p>
+
+    <h2>Law</h2>
+    <p>These terms are governed by the laws of Kenya.</p>
+  </div>
+</section>
+{% endblock %}

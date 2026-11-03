@@ -1,0 +1,30 @@
+{% extends "dash_base.html" %}
+{% block title %}My documents{% endblock %}
+{% block heading %}<h1>Welcome, {{ current_user.name.split(' ')[0] }}</h1>{% endblock %}
+{% block content %}
+<section class="welcome">
+  <div>
+    <h2>Your documents</h2>
+    <p>Agreements, proposals and guides that Apex Solutions has shared with you. Downloads are recorded so we both have a record of what was shared.</p>
+  </div>
+  <a class="btn btn--light" href="{{ url_for('site.contact') }}">{{ icon("chat", "ic ic--sm") }} Contact Apex</a>
+</section>
+{% if grouped %}
+  {% for cat, docs in grouped.items() %}
+  <section class="card">
+    <div class="card__head"><h2>{{ cat }}</h2><span class="muted">{{ docs|length }} {{ "file" if docs|length == 1 else "files" }}</span></div>
+    <ul class="doclist">
+      {% for d in docs %}
+      <li>
+        <span class="fileic fileic--{{ d.extension }}">{{ d.extension|upper }}</span>
+        <span class="doclist__main"><strong>{{ d.title }}</strong>{% if d.description %}<span>{{ d.description }}</span>{% endif %}<small>{{ d.size|filesize }}, added {{ d.created_at.strftime('%d %b %Y') }}</small></span>
+        <a class="btn btn--primary btn--sm" href="{{ url_for('portal.download', did=d.id) }}">{{ icon("doc", "ic ic--sm") }} Download</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+{% else %}
+<section class="card"><p class="empty-note">No documents have been shared with you yet. When Apex shares an agreement or proposal, it will appear here.</p></section>
+{% endif %}
+{% endblock %}

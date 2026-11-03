@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, photo_hero, work_card, cta_band with context %}
+{% block title %}Our Work — Apex Solutions{% endblock %}
+{% block description %}Projects built by Apex Solutions: e-commerce, POS, school management, financial intelligence and data platforms.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-work", "Our Portfolio", "Our Work", "Real projects, built to solve real business challenges. Each one is shown with its true status, and we only publish results that have been measured.") %}
+  <div class="actions"><a class="btn btn--primary btn--lg" href="{{ url_for('site.contact') }}">Talk to Our Team {{ icon("next", "ic ic--xs") }}</a></div>
+{% endcall %}
+
+<section class="sec sec--snug">
+  <div class="wrap">
+    <div class="filters" role="group" aria-label="Filter projects">
+      {% for key, label, ic in c.WORK_FILTERS %}
+      <button type="button" class="filter{% if key == 'all' %} is-on{% endif %}" data-filter="{{ key }}" aria-pressed="{{ 'true' if key == 'all' else 'false' }}">{{ icon(ic, "ic ic--sm") }}{{ label }}</button>
+      {% endfor %}
+    </div>
+    <div class="wgrid" id="work-grid">
+      {% for w in work %}{{ work_card(w) }}{% endfor %}
+    </div>
+    <p class="empty" id="work-empty" hidden>No projects in this category yet.</p>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="wrap">
+    <div class="proof__in">
+      {% for ic, t, d in c.PROOF_STRIP %}
+      <div class="proof__item">{{ icon(ic) }}<span><strong>{{ t }}</strong>{{ d }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band("Let's build your success story", "Tell us what you need to fix and we will show you how we would approach it.", "trophy", "Start a Project") }}
+{% endblock %}

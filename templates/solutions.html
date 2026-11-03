@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "macros.html" import icon, photo_hero, sol_card, cta_band, availability with context %}
+{% block title %}Solutions — Apex Solutions{% endblock %}
+{% block description %}Custom software, POS, websites and e-commerce, AI, data and BI, cloud and hosting, integrations and cybersecurity from Apex Solutions.{% endblock %}
+{% block content %}
+{% call photo_hero("hero-solutions", "Our Solutions", "Comprehensive technology solutions", "From custom software to intelligent automation, Apex Solutions delivers integrated technology that helps your business operate smarter, work more efficiently and grow faster.") %}
+  <div class="actions">
+    <a class="btn btn--primary btn--lg" href="#areas">Find the Right Solution {{ icon("next", "ic ic--xs") }}</a>
+    <a class="btn btn--outline btn--lg" href="{{ url_for('site.pricing') }}">View Pricing</a>
+  </div>
+{% endcall %}
+
+<section class="points">
+  <div class="wrap">
+    <ul class="points__list">
+      {% for ic, t in c.HERO_POINTS %}<li>{{ icon(ic) }}<span>{{ t }}</span></li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="sec sec--snug" id="areas">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Our Solution Areas</h2>
+      <p>Explore our range of solutions designed to meet your unique business needs.</p>
+    </div>
+    <div class="sgrid">
+      {% for s in nav_solutions %}{{ sol_card(s, s.explore) }}{% endfor %}
+    </div>
+
+    <div class="tiers">
+      <h3>How each service is offered</h3>
+      <ul>
+        <li>{{ availability(c.NOW) }}<span>Packaged, priced and ready to start.</span></li>
+        <li>{{ availability(c.CONSULT) }}<span>Offered case by case while we build out packages. We will say honestly whether it is a good fit.</span></li>
+        <li>{{ availability(c.SPECIALIST) }}<span>Specialist work, or delivered with a certified partner where certification is required.</span></li>
+      </ul>
+      <div class="tiers__grid">
+        {% for s in nav_solutions %}<a href="{{ url_for('site.solution', slug=s.slug) }}"><strong>{{ s.nav_title }}</strong>{{ availability(s.availability) }}</a>{% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--tint" id="all-services">
+  <div class="wrap">
+    <div class="center-head center-head--rule">
+      <h2>Every service, at a glance</h2>
+      <p>Open any service to read what it does, where it is used, an example and its starting price.</p>
+    </div>
+    <div class="sindex">
+      {% for s in nav_solutions %}
+      <div class="sindex__group">
+        <h3><a href="{{ url_for('site.solution', slug=s.slug) }}">{{ icon(s.icon) }}<span>{{ s.nav_title }}</span></a></h3>
+        <ul>
+          {% for v in s.services %}
+          <li><a href="{{ url_for('site.solution', slug=s.slug) }}#{{ v.slug }}"><span>{{ v.name }}</span><small class="svx__dot svx__dot--{{ 'now' if v.availability == c.NOW else ('consult' if v.availability == c.CONSULT else 'spec') }}">{{ v.availability }}</small></a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band("Need a custom solution?", "Let's discuss your requirements and design the right solution for your organisation.", "handshake", "Contact Our Team") }}
+{% endblock %}

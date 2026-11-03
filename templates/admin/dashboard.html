@@ -1,0 +1,178 @@
+{% extends "dash_base.html" %}
+{% block title %}Overview{% endblock %}
+{% block heading %}<h1>Overview</h1>{% endblock %}
+{% block content %}
+{% set first = current_user.name.split(' ')[0] %}
+{% set stage_label = {"new": "New", "contacted": "Contacted", "proposal sent": "Proposal sent", "won": "Won", "lost": "Lost", "closed": "Closed"} %}
+{% set event_label = {
+  "login": "Signed in", "logout": "Signed out", "login_failed": "Failed to sign in", "account_locked": "Was locked out",
+  "password_set": "Set their password", "password_reset": "Reset their password", "password_changed": "Changed their password",
+  "reset_requested": "Asked for a reset link", "profile_updated": "Updated their profile",
+  "client_created": "Added a client", "client_enabled": "Enabled a client", "client_disabled": "Disabled a client",
+  "setup_link_created": "Created a set-up link", "reset_link_created": "Created a reset link",
+  "document_uploaded": "Uploaded a document", "document_updated": "Changed a document", "document_deleted": "Deleted a document",
+  "document_downloaded": "Downloaded a document", "download_denied": "Was refused a download",
+  "enquiry_status": "Updated an enquiry", "enquiries_exported": "Exported enquiries"} %}
+
+<section class="ov-hello">
+  <div class="ov-hello__txt">
+    <p class="ov-hello__date">{{ today.strftime('%A %-d %B %Y') }}</p>
+    <h2>{{ greeting }}, {{ first }}.</h2>
+    <p>
+      {% if stats.new == 1 %}One new enquiry is waiting for a reply.
+      {% elif stats.new %}{{ stats.new }} new enquiries are waiting for a reply.
+      {% elif stats.enquiries %}No new enquiries are waiting. Everything has been picked up.
+      {% else %}No enquiries yet. They arrive here as soon as someone sends the contact form.{% endif %}
+    </p>
+  </div>
+  <div class="ov-hello__acts">
+    {% if stats.new %}<a class="btn btn--light" href="{{ url_for('admin.enquiries', status='new') }}">{{ icon("mail", "ic ic--sm") }} Reply to enquiries</a>{% endif %}
+    <a class="btn {{ 'btn--ghost-light' if stats.new else 'btn--light' }}" href="{{ url_for('admin.client_new') }}">{{ icon("users", "ic ic--sm") }} Add a client</a>
+    <a class="btn btn--ghost-light" href="{{ url_for('admin.document_upload') }}">{{ icon("doc", "ic ic--sm") }} Upload a document</a>
+  </div>
+</section>
+
+<section class="card ov-pipe">
+  <div class="card__head">
+    <h2>Enquiry pipeline</h2>
+    <a href="{{ url_for('admin.enquiries') }}">All enquiries</a>
+  </div>
+  <ol class="pipe">
+    {% for st, n in pipeline %}
+    <li class="pipe__stage pipe__stage--{{ st|replace(' ', '-') }}{% if not n %} is-zero{% endif %}">
+      <a href="{{ url_for('admin.enquiries', status=st) }}"><strong>{{ n }}</strong><span>{{ stage_label[st] }}</span></a>
+    </li>
+    {% endfor %}
+  </ol>
+  <dl class="pipe__sum">
+    <div><dt>Still open</dt><dd>{{ stats.open }}</dd></div>
+    <div><dt>Received this month</dt><dd>{{ stats.month }}</dd></div>
+    <div><dt>All time</dt><dd>{{ stats.enquiries }}</dd></div>
+    <div><dt>Won of those decided</dt><dd>{% if stats.win_rate is not none %}{{ stats.win_rate }}%{% else %}Not yet{% endif %}</dd></div>
+  </dl>
+</section>
+
+<div class="dgrid">
+  <section class="card">
+    <div class="card__head">
+      <h2>{{ "Waiting for a reply" if waiting else "Latest enquiries" }}</h2>
+      <a href="{{ url_for('admin.enquiries', status='new') if waiting else url_for('admin.enquiries') }}">View all</a>
+    </div>
+    {% set list = waiting or latest %}
+    {% if list %}
+    <ul class="rows">
+      {% for e in list %}
+      <li><a href="{{ url_for('admin.enquiry', eid=e.id) }}">
+        <span class="ov-av" aria-hidden="true">{{ e.name[:1]|upper }}</span>
+        <span class="rows__main"><strong>{{ e.name }}</strong><small>{{ services.get(e.service, e.service) }}{% if e.organisation %}, {{ e.organisation }}{% endif %}</small></span>
+        <span class="rows__side"><span class="st st--{{ e.status|replace(' ', '-') }}">{{ stage_label.get(e.status, e.status) }}</span><small>{{ e.created_at|local('%d %b, %H:%M') }}</small></span>
+      </a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="ov-empty">
+      {{ icon("mail") }}
+      <p>Enquiries from the website's contact form will appear here, newest first.</p>
+      <a href="{{ url_for('site.contact') }}" target="_blank" rel="noopener">Open the contact form</a>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <div class="card__head"><h2>What people ask about</h2></div>
+    {% if by_service %}
+    {% set top = by_service[0][1] %}
+    <ul class="bars">
+      {% for svc, n in by_service %}
+      <li>
+        <span class="bars__lbl">{{ services.get(svc, svc) or "Not chosen" }}</span>
+        <span class="bars__track"><span class="bars__fill bars__fill--{{ ((100 * n / top) / 5)|round|int * 5 }}"></span></span>
+        <span class="bars__n">{{ n }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="ov-empty">
+      {{ icon("chart") }}
+      <p>Once enquiries come in, this shows which services people ask about most.</p>
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+<div class="dgrid dgrid--even">
+  <section class="card">
+    <div class="card__head">
+      <h2>Clients <span class="ov-count">{{ stats.clients }}</span></h2>
+      <a href="{{ url_for('admin.clients') }}">All clients</a>
+    </div>
+    {% if stats.pending %}<p class="ov-flag">{{ icon("clock", "ic ic--sm") }} {{ stats.pending }} {{ "client has" if stats.pending == 1 else "clients have" }} not set a password yet.</p>{% endif %}
+    {% if recent_clients %}
+    <ul class="rows">
+      {% for u in recent_clients %}
+      <li><a href="{{ url_for('admin.client', uid=u.id) }}">
+        <span class="ov-av" aria-hidden="true">{{ u.name[:1]|upper }}</span>
+        <span class="rows__main"><strong>{{ u.name }}</strong><small>{{ u.organisation or "No organisation" }}</small></span>
+        <span class="rows__side">
+          {% if not u.is_active %}<span class="st st--closed">Disabled</span>
+          {% elif not u.is_set_up %}<span class="st st--contacted">Invite sent</span>
+          {% else %}<span class="st st--won">Active</span>{% endif %}
+        </span>
+      </a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="ov-empty">
+      {{ icon("users") }}
+      <p>Add a client to give them a private portal for their agreements and proposals.</p>
+      <a href="{{ url_for('admin.client_new') }}">Add your first client</a>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="card">
+    <div class="card__head">
+      <h2>Documents <span class="ov-count">{{ stats.documents }}</span></h2>
+      <a href="{{ url_for('admin.documents') }}">All documents</a>
+    </div>
+    {% if docs %}
+    <p class="ov-sub">{{ stats.shared }} shared with clients, {{ stats.documents - stats.shared }} admin only.</p>
+    <ul class="rows rows--plain">
+      {% for d in docs %}
+      <li>
+        <span class="fileic fileic--{{ d.extension }}">{{ d.extension|upper }}</span>
+        <span class="rows__main"><strong>{{ d.title }}</strong><small>{{ d.size|filesize }}, added {{ d.created_at|local('%d %b %Y') }}</small></span>
+        <span class="rows__side"><span class="vis vis--{{ d.visibility }}">{{ d.VISIBILITY[d.visibility] }}</span></span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="ov-empty">
+      {{ icon("doc") }}
+      <p>Upload agreements, proposals and guides, then choose who can download them.</p>
+      <a href="{{ url_for('admin.document_upload') }}">Upload a document</a>
+    </div>
+    {% endif %}
+  </section>
+</div>
+
+<section class="card">
+  <div class="card__head"><h2>Recent activity</h2><a href="{{ url_for('admin.activity') }}">Full log</a></div>
+  {% if activity %}
+  <ol class="tl">
+    {% for a in activity %}
+    <li class="tl__item{% if a.action in ('login_failed', 'account_locked', 'download_denied') %} tl__item--warn{% endif %}">
+      <span class="tl__time">{{ a.at|local('%d %b, %H:%M') }}</span>
+      <span class="tl__txt"><strong>{{ a.user.name if a.user else "Someone" }}</strong> {{ event_label.get(a.action, a.action|replace('_', ' '))|lower }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}<p class="empty-note">No activity recorded yet.</p>{% endif %}
+</section>
+
+<section class="ov-quick">
+  <a href="{{ url_for('admin.export_enquiries') }}">{{ icon("chart", "ic ic--sm") }} Export enquiries (CSV)</a>
+  <a href="{{ url_for('site.home') }}" target="_blank" rel="noopener">{{ icon("globe", "ic ic--sm") }} Open the website</a>
+  <a href="{{ url_for('auth.profile') }}">{{ icon("users", "ic ic--sm") }} My profile</a>
+</section>
+{% endblock %}

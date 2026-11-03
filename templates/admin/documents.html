@@ -1,0 +1,31 @@
+{% extends "dash_base.html" %}
+{% block title %}Documents{% endblock %}
+{% block heading %}<h1>Documents</h1>{% endblock %}
+{% block content %}
+<div class="toolbar">
+  <p class="muted">Upload agreements, templates and guides, then choose who can download each one.</p>
+  <a class="btn btn--primary btn--sm" href="{{ url_for('admin.document_upload') }}">{{ icon("doc", "ic ic--sm") }} Upload a document</a>
+</div>
+<section class="card">
+  {% if docs %}
+  <div class="dtable-wrap"><table class="dtable">
+    <thead><tr><th scope="col">Document</th><th scope="col">Category</th><th scope="col">Who can download</th><th scope="col">Added</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+    <tbody>
+    {% for d in docs %}
+      <tr>
+        <td><span class="fileic fileic--{{ d.extension }}">{{ d.extension|upper }}</span><strong>{{ d.title }}</strong><br><small class="muted">{{ d.original_name }}, {{ d.size|filesize }}</small></td>
+        <td>{{ d.category }}</td>
+        <td><span class="vis vis--{{ d.visibility }}">{{ d.VISIBILITY[d.visibility] }}</span>{% if d.client %}<br><small class="muted">{{ d.client.name }}</small>{% endif %}</td>
+        <td>{{ d.created_at.strftime('%d %b %Y') }}</td>
+        <td class="actions-cell">
+          <a class="btn btn--outline btn--sm" href="{{ url_for('portal.download', did=d.id) }}">Download</a>
+          <a class="btn btn--outline btn--sm" href="{{ url_for('admin.document_edit', did=d.id) }}">Edit</a>
+          <form method="post" action="{{ url_for('admin.document_delete', did=d.id) }}" class="js-confirm" data-confirm="Delete {{ d.title }}? This cannot be undone.">{{ form.csrf_token }}<button class="btn btn--danger btn--sm" type="submit">Delete</button></form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  {% else %}<p class="empty-note">No documents yet. Upload your agreements, proposal template and guides here.</p>{% endif %}
+</section>
+{% endblock %}
