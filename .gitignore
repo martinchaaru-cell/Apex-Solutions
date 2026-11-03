@@ -11,3 +11,4 @@ backups/
 .venv/
 .replit-deps-installed
 .secret_key
+.github/
